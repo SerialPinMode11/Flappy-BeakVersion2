@@ -6,6 +6,7 @@ use App\Http\Controllers\ControllerName;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () { return view('welcome'); } );
 
@@ -15,9 +16,8 @@ Route::post("/login", [AuthController::class, "loginPost"])->name("login.post");
 Route::get("/register", [AuthController::class, "register"])->name('register');
 Route::post("/register", [AuthController::class, "registerPost"])->name("register.post");
 
-
+//customer routes
 Route::middleware("auth")->group(function(){
-    // Route::get("/home",[AuthController::class, "home"])->name("home"); home
     Route::get("/contactUs", [ControllerName::class, "contactUs"])->name("contact");
     Route::post("contactUs", [ControllerName::class, "contactPost"])->name("contact.post");
     Route::get("aboutUs", [ControllerName::class, "aboutUs"])->name("about");
@@ -30,4 +30,10 @@ Route::middleware("auth")->group(function(){
     Route::delete('/remove-from-cart', [CartController::class, 'removeFromCart'])->name('cart.remove');
     //Checkout
     Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
+});
+
+//admin routes
+Route::middleware("auth")->group(function(){
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 });
