@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,42 +23,53 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
         body {
             font-family: 'Poppins', sans-serif;
         }
+
         .slide {
             display: none;
             transition: all 0.5s ease;
         }
+
         .slide.active {
             display: block;
         }
+
         .dot {
             transition: all 0.3s ease;
         }
+
         .dot.active {
             background-color: #FF6B6B;
         }
+
         .quick-view {
             opacity: 0;
             transition: all 0.3s ease;
         }
+
         .product-card:hover .quick-view {
             opacity: 1;
         }
+
         .star-rating {
             color: #FFD700;
         }
+
         .product-card {
             transition: all 0.3s ease;
         }
+
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
-<body class="bg-gray-50">
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
     <header class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-primary">JM Casabar Pekin Store</h1>
@@ -75,16 +87,21 @@
                     </button>
                 </div>
                 <button class="text-neutral hover:text-primary transition-colors">
-                    <i class="far fa-heart text-xl"></i>
+                    <a href="{{route('checkout')}}">
+                        <i class="fas fa-credit-card text-xl"></i>
+                    </a> 
                 </button>
                 <button class="text-neutral hover:text-primary transition-colors">
-                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <a href="{{ route('cart.view' )}}">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                    </a>
                 </button>
             </div>
         </div>
     </header>
 
-    <main>
+    <!-- Make the main content push the footer down -->
+    <main class="flex-1">
         @yield('content')
     </main>
 
@@ -96,5 +113,6 @@
 
     @stack('scripts')
 </body>
-</html>
 
+
+</html>
