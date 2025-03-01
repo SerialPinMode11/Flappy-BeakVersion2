@@ -7,6 +7,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminBillingController;
+use App\Http\Controllers\AdminProductController;
 
 Route::get('/', function () { return view('welcome'); } );
 
@@ -30,10 +32,26 @@ Route::middleware("auth")->group(function(){
     Route::delete('/remove-from-cart', [CartController::class, 'removeFromCart'])->name('cart.remove');
     //Checkout
     Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+    
 });
 
 //admin routes
 Route::middleware("auth")->group(function(){
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+    Route::get('/admin/dashboard', [AdminBillingController::class, 'dashboard'])->name('admin.dashboard');
+    Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout'); 
+    //biling
+    Route::get('/admin/billing', [AdminBillingController::class, 'index'])->name('admin.billing.index');
+    Route::get('/admin/billing/{id}', [AdminBillingController::class, 'show'])->name('admin.billing.show');
+    Route::get('/admin/billing/{id}/edit', [AdminBillingController::class, 'edit'])->name('admin.billing.edit');
+    Route::put('/admin/billing/{id}', [AdminBillingController::class, 'update'])->name('admin.billing.update');
+    //product list
+    Route::get('/admin/products', [AdminProductController::class, 'index'])->name('admin.product.index');
+    Route::get('/admin/products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
+    Route::post('/admin/products', [AdminProductController::class, 'store'])->name('admin.products.store');
+    Route::get('/admin/products/{id}', [AdminProductController::class, 'show'])->name('admin.products.show');
+    Route::get('/admin/products/{id}/edit', [AdminProductController::class, 'edit'])->name('admin.products.edit');
+    Route::put('/admin/products/{id}', [AdminProductController::class, 'update'])->name('admin.products.update');
+    Route::delete('/admin/products/{id}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
 });

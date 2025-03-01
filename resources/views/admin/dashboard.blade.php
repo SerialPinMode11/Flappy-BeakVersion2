@@ -1,5 +1,10 @@
 @extends('layouts.static')
 @section('title', 'Admin Dashboard')
+
+@push('styles')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@endpush
+
 @section('content')
 <header class="bg-white shadow-sm">
     <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -27,8 +32,61 @@
                 <h3 class="text-gray-500 text-sm font-medium">Total Revenue</h3>
                 <span class="text-red-500 bg-red-100 p-2 rounded-full"><i class="fas fa-dollar-sign"></i></span>
             </div>
-            <p class="text-2xl font-bold text-gray-800">$45,231.89</p>
+            <p class="text-2xl font-bold text-gray-800">₱{{ number_format($totalSales, 2) }}</p>
         </div>
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-gray-500 text-sm font-medium">Total Customers</h3>
+                <span class="text-blue-500 bg-blue-100 p-2 rounded-full"><i class="fas fa-users"></i></span>
+            </div>
+            <p class="text-2xl font-bold text-gray-800">{{ $totalCustomers }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <h3 class="text-lg font-semibold mb-4">Monthly Sales</h3>
+        <canvas id="monthlySalesChart"></canvas>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    const ctx = document.getElementById('monthlySalesChart').getContext('2d');
+    const monthlySalesData = @json($monthlySales);
+    
+    const labels = monthlySalesData.map(item => {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return monthNames[item.month - 1];
+    });
+    
+    const data = monthlySalesData.map(item => item.total);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Monthly Sales',
+                data: data,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return '₱' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+@endpush
